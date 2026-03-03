@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0e1015">
+<title>STOCKR</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Barlow:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #0e1015;
+  --surface:   #14171f;
+  --raised:    #1b1f2a;
+  --border:    #272d3d;
+  --border2:   #353d52;
+  --text:      #dde2f0;
+  --muted:     #6a738f;
+  --dim:       #424c66;
+
+  --cyan:      #00d4e8;
+  --cyan-dim:  rgba(0,212,232,.1);
+  --green:     #1fd97a;
+  --green-dim: rgba(31,217,122,.1);
+  --red:       #f0455a;
+  --red-dim:   rgba(240,69,90,.1);
+  --amber:     #f5a623;
+  --amber-dim: rgba(245,166,35,.1);
+
+  /* Department accent colours */
+  --prod:      #ff9500;
+  --prod-dim:  rgba(255,149,0,.12);
+  --elec:      #00d4e8;
+  --elec-dim:  rgba(0,212,232,.12);
+
+  --font:  'Barlow', sans-serif;
+  --mono:  'IBM Plex Mono', monospace;
+  --r:     12px;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg); color: var(--text); font-family: var(--font);
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+button, input, select { font-family: inherit; }
+
+/* ═══════════════════════════════════════════
+   DEPARTMENT SELECTION SCREEN
+═══════════════════════════════════════════ */
+#dept-screen {
+  position: fixed; inset: 0; z-index: 500;
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 32px 24px calc(32px + var(--safe-bot));
+  padding-top: calc(32px + var(--safe-top));
+}
+#dept-screen.hidden { display: none; }
+
+.ds-logo {
+  font-family: var(--mono); font-size: 2rem; font-weight: 700;
+  letter-spacing: .15em; color: var(--text); margin-bottom: 6px;
+}
+.ds-logo span { color: var(--cyan); }
+.ds-sub {
+  font-size: .75rem; font-weight: 600; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 48px;
+  font-family: var(--mono);
+}
+.ds-label {
+  font-size: .68rem; font-weight: 700; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--dim); margin-bottom: 20px;
+  font-family: var(--mono);
+}
+.dept-cards { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 340px; }
+
+.dept-card {
+  position: relative; overflow: hidden;
+  border-radius: 16px; border: 2px solid var(--border2);
+  padding: 24px 22px; cursor: pointer;
+  display: flex; align-items: center; gap: 18px;
+  transition: all .2s; background: var(--raised);
+  -webkit-tap-highlight-color: transparent;
+}
+.dept-card:active { transform: scale(.97); }
+.dept-card.prod { border-color: var(--prod); }
+.dept-card.prod:active { background: var(--prod-dim); }
+.dept-card.elec { border-color: var(--elec); }
+.dept-card.elec:active { background: var(--elec-dim); }
+
+.dept-card::before {
+  content: ''; position: absolute; inset: 0; opacity: .04;
+  background: repeating-linear-gradient(45deg, currentColor 0, currentColor 1px, transparent 1px, transparent 8px);
+}
+.dept-card.prod::before { color: var(--prod); }
+.dept-card.elec::before { color: var(--elec); }
+
+.dc-icon { font-size: 2.4rem; flex-shrink: 0; line-height: 1; }
+.dc-info { flex: 1; }
+.dc-name {
+  font-size: 1.2rem; font-weight: 900; letter-spacing: .02em;
+  text-transform: uppercase; line-height: 1;
+}
+.dept-card.prod .dc-name { color: var(--prod); }
+.dept-card.elec .dc-name { color: var(--elec); }
+.dc-desc { font-size: .78rem; color: var(--muted); margin-top: 4px; }
+.dc-arrow { font-size: 1.3rem; color: var(--dim); flex-shrink: 0; }
+
+.ds-user {
+  margin-top: 40px; text-align: center;
+  font-size: .78rem; color: var(--muted); cursor: pointer;
+  display: flex; align-items: center; gap: 8px; font-family: var(--mono);
+}
+.ds-user:active { color: var(--text); }
+.ds-user-name { color: var(--cyan); font-weight: 600; }
+
+/* ═══════════════════════════════════════════
+   MAIN APP
+═══════════════════════════════════════════ */
+#main-app { height: 100%; display: flex; flex-direction: column; }
+
+/* ── Top bar ── */
+.topbar {
+  flex-shrink: 0; padding-top: var(--safe-top);
+  background: var(--surface); border-bottom: 1px solid var(--border); z-index: 50;
+}
+.topbar-inner {
+  height: 56px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 14px; gap: 10px;
+}
+.back-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: none; color: var(--muted); cursor: pointer;
+  font-size: .82rem; font-weight: 700; letter-spacing: .04em; padding: 6px 0;
+  transition: color .15s;
+}
+.back-btn:active { color: var(--text); }
+.back-arrow { font-size: 1rem; }
+.dept-badge {
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 12px; border-radius: 20px;
+  background: var(--raised); border: 1.5px solid var(--border2);
+  font-family: var(--mono); font-size: .75rem; font-weight: 700;
+  letter-spacing: .06em;
+}
+.dept-badge-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dept-prod .dept-badge-dot { background: var(--prod); box-shadow: 0 0 6px var(--prod); }
+.dept-elec .dept-badge-dot { background: var(--elec); box-shadow: 0 0 6px var(--elec); }
+.dept-prod .dept-badge-name { color: var(--prod); }
+.dept-elec .dept-badge-name { color: var(--elec); }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.led { width: 7px; height: 7px; border-radius: 50%; background: var(--dim); transition: all .4s; flex-shrink: 0; }
+.led.on  { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.led.off { background: var(--red); animation: blink 1.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* ── Tab bar ── */
+.tabbar {
+  flex-shrink: 0; display: flex;
+  background: var(--surface); border-bottom: 2px solid var(--border);
+  overflow-x: auto; scrollbar-width: none; z-index: 50;
+}
+.tabbar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex: 1; min-width: 62px; height: 56px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; border: none; background: transparent; color: var(--muted);
+  cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px;
+  transition: color .15s, border-color .15s; padding: 0 4px;
+}
+.tab-btn .ti { font-size: 1.3rem; line-height: 1; }
+.tab-btn .tl { font-size: .58rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+
+/* dept-aware active colour */
+.dept-prod .tab-btn.act { color: var(--prod); border-bottom-color: var(--prod); }
+.dept-elec .tab-btn.act { color: var(--elec); border-bottom-color: var(--elec); }
+
+/* ── Panels ── */
+.panels { flex: 1; overflow: hidden; position: relative; }
+.panel {
+  position: absolute; inset: 0;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding: 14px 13px calc(56px + var(--safe-bot));
+  display: none;
+}
+.panel.act { display: block; }
+
+/* ── Stats ── */
+.stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
+.stat-box {
+  background: var(--raised); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px 8px; text-align: center;
+}
+.stat-n { font-family: var(--mono); font-size: 1.55rem; font-weight: 700; line-height: 1; }
+.stat-l { font-size: .58rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
+/* ── Search ── */
+.searchbar {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--raised); border: 1.5px solid var(--border);
+  border-radius: var(--r); padding: 0 14px; margin-bottom: 12px; transition: border-color .2s;
+}
+.searchbar:focus-within { border-color: var(--cyan); }
+.searchbar input {
+  flex: 1; height: 46px; background: transparent; border: none; outline: none;
+  color: var(--text); font-size: .9rem;
+}
+.searchbar input::placeholder { color: var(--dim); }
+
+/* ── Inventory cards ── */
+.inv-card {
+  background: var(--raised); border: 1.5px solid var(--border);
+  border-radius: var(--r); padding: 13px 13px 10px; margin-bottom: 8px;
+  display: flex; gap: 12px;
+}
+.inv-card.s-ok  { border-left: 4px solid var(--green); }
+.inv-card.s-low { border-left: 4px solid var(--amber); }
+.inv-card.s-out { border-left: 4px solid var(--red); }
+.inv-main { flex: 1; min-width: 0; }
+.inv-name { font-size: .97rem; font-weight: 700; line-height: 1.2; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.inv-sku  { font-family: var(--mono); font-size: .7rem; color: var(--cyan); margin-bottom: 4px; }
+.inv-meta { font-size: .73rem; color: var(--muted); }
+.inv-side { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
+.inv-qty  { font-family: var(--mono); font-size: 1.75rem; font-weight: 700; line-height: 1; }
+.inv-unit { font-size: .62rem; color: var(--muted); margin-top: -3px; }
+.pill { font-family: var(--mono); font-size: .6rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+.pill-ok  { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
+.pill-low { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber); }
+.pill-out { background: var(--red-dim);   color: var(--red);   border: 1px solid var(--red); }
+.inv-acts { display: flex; gap: 6px; margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--border); }
+.ia {
+  flex: 1; height: 33px; border: 1px solid var(--border); background: transparent;
+  border-radius: 8px; color: var(--muted); font-size: .77rem; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 3px;
+  transition: all .15s;
+}
+.ia:active { transform: scale(.95); }
+.ia.edit:active { border-color: var(--cyan); color: var(--cyan); background: var(--cyan-dim); }
+.ia.qr:active   { border-color: var(--amber); color: var(--amber); background: var(--amber-dim); }
+.ia.del:active  { border-color: var(--red); color: var(--red); background: var(--red-dim); }
+
+/* ── FAB ── */
+.fab {
+  position: fixed; bottom: calc(18px + var(--safe-bot)); right: 16px; z-index: 40;
+  width: 56px; height: 56px; border-radius: 50%; border: none;
+  font-size: 1.5rem; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: transform .15s; color: #000; font-weight: 700;
+}
+.fab:active { transform: scale(.9); }
+.dept-prod .fab { background: var(--prod); box-shadow: 0 4px 20px rgba(255,149,0,.4); }
+.dept-elec .fab { background: var(--elec); box-shadow: 0 4px 20px rgba(0,212,232,.35); }
+
+/* ── Scanner ── */
+.scan-trigger {
+  width: 100%; border: 2px dashed var(--border2);
+  border-radius: var(--r); background: var(--raised);
+  padding: 26px 16px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 10px;
+  cursor: pointer; transition: all .2s; min-height: 138px; margin-bottom: 12px;
+}
+.scan-trigger:active { border-style: solid; }
+.dept-prod .scan-trigger:active { border-color: var(--prod); background: var(--prod-dim); }
+.dept-elec .scan-trigger:active { border-color: var(--elec); background: var(--elec-dim); }
+.scan-trigger.active { border-style: solid; padding: 0; overflow: hidden; background: #000; min-height: 200px; }
+.dept-prod .scan-trigger.active { border-color: var(--prod); }
+.dept-elec .scan-trigger.active { border-color: var(--elec); }
+.scan-trigger video { width: 100% !important; max-height: 260px; object-fit: cover; display: block; }
+.si { font-size: 2.2rem; }
+.st { font-size: .95rem; font-weight: 700; }
+.sh { font-size: .75rem; color: var(--muted); }
+
+/* ── Forms ── */
+.field { margin-bottom: 11px; }
+.field label {
+  display: block; font-size: .65rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 5px; font-family: var(--mono);
+}
+.field input, .field select {
+  width: 100%; height: 50px; padding: 0 13px;
+  background: var(--raised); border: 1.5px solid var(--border);
+  border-radius: var(--r); color: var(--text); font-size: .9rem;
+  outline: none; transition: border-color .2s; -webkit-appearance: none;
+}
+.dept-prod .field input:focus, .dept-prod .field select:focus { border-color: var(--prod); }
+.dept-elec .field input:focus, .dept-elec .field select:focus { border-color: var(--elec); }
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%236a738f' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 13px center; padding-right: 36px;
+}
+.field select option { background: var(--surface); }
+
+/* ── Preview ── */
+.preview-box {
+  background: var(--raised); border: 1.5px solid var(--border);
+  border-radius: var(--r); padding: 13px; margin-bottom: 11px;
+  min-height: 76px; display: flex; flex-direction: column; justify-content: center;
+}
+.pv-empty { color: var(--dim); font-family: var(--mono); font-size: .78rem; }
+.pv-name  { font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
+.pv-sku   { font-family: var(--mono); font-size: .7rem; color: var(--cyan); margin-bottom: 7px; }
+.pv-qty   { font-family: var(--mono); font-size: 1.9rem; font-weight: 700; line-height: 1; }
+.pv-unit  { font-size: .78rem; color: var(--muted); }
+
+/* ── Buttons ── */
+.bigbtn {
+  width: 100%; height: 56px; border: none; border-radius: var(--r);
+  font-size: 1rem; font-weight: 700; letter-spacing: .04em;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: transform .15s; margin-bottom: 9px;
+}
+.bigbtn:active { transform: scale(.97); }
+.bigbtn:last-child { margin-bottom: 0; }
+.btn-in   { background: var(--green); color: #071a0f; }
+.btn-out  { background: var(--red);   color: #fff; }
+.btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+.btn-ghost:active { border-color: var(--cyan); color: var(--cyan); }
+.dept-prod .btn-blue { background: var(--prod); color: #1a0a00; }
+.dept-elec .btn-blue { background: var(--elec); color: #001a1e; }
+
+/* ── Section card ── */
+.scard { background: var(--raised); border: 1px solid var(--border); border-radius: var(--r); padding: 15px; margin-bottom: 13px; }
+.scard-title {
+  font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 13px; display: flex; align-items: center; gap: 8px; font-family: var(--mono);
+}
+.dept-prod .scard-title::before { content:''; display:block; width:3px; height:13px; background: var(--prod); border-radius:2px; }
+.dept-elec .scard-title::before { content:''; display:block; width:3px; height:13px; background: var(--elec); border-radius:2px; }
+
+/* ── History ── */
+.filter-strip { display: flex; gap: 8px; margin-bottom: 12px; overflow-x: auto; scrollbar-width: none; }
+.filter-strip::-webkit-scrollbar { display: none; }
+.ftag {
+  flex-shrink: 0; padding: 6px 14px; border-radius: 20px;
+  border: 1.5px solid var(--border); background: transparent;
+  font-size: .75rem; font-weight: 700; color: var(--muted); cursor: pointer; transition: all .15s;
+}
+.dept-prod .ftag.act { border-color: var(--prod); color: var(--prod); background: var(--prod-dim); }
+.dept-elec .ftag.act { border-color: var(--elec); color: var(--elec); background: var(--elec-dim); }
+.hx-item {
+  background: var(--raised); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px 13px; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 11px;
+}
+.hx-item.hx-in  { border-left: 4px solid var(--green); }
+.hx-item.hx-out { border-left: 4px solid var(--red); }
+.hx-icon { font-size: 1.2rem; flex-shrink: 0; }
+.hx-info { flex: 1; min-width: 0; }
+.hx-name { font-size: .87rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hx-meta { font-size: .68rem; color: var(--muted); font-family: var(--mono); margin-top: 2px; }
+.hx-qty  { font-family: var(--mono); font-size: 1.1rem; font-weight: 700; flex-shrink: 0; }
+
+/* ── Code generator ── */
+.code-preview {
+  background: #fff; border-radius: var(--r); padding: 18px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  margin: 11px 0; min-height: 90px; justify-content: center;
+}
+.code-preview .ph { color: #aaa; font-size: .82rem; }
+#bc-svg { max-width: 100%; }
+.dl-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* ── Bottom sheet ── */
+.sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 200; display: none; align-items: flex-end; }
+.sheet-overlay.open { display: flex; }
+.sheet {
+  width: 100%; background: var(--surface); border-radius: 20px 20px 0 0;
+  border-top: 1px solid var(--border2);
+  padding: 0 15px calc(18px + var(--safe-bot));
+  max-height: 92vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  animation: slideUp .22s ease;
+}
+@keyframes slideUp { from { transform: translateY(50px); opacity:.4; } to { transform: none; opacity:1; } }
+.sheet-handle { width: 34px; height: 4px; background: var(--border2); border-radius: 2px; margin: 11px auto 16px; }
+.sheet-title { font-size: 1.05rem; font-weight: 900; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+.sheet-x { background: none; border: none; color: var(--muted); font-size: 1.2rem; cursor: pointer; padding: 4px; }
+
+/* ── Toast ── */
+#toasts {
+  position: fixed; top: calc(64px + var(--safe-top)); left: 50%; transform: translateX(-50%);
+  z-index: 300; width: 90%; max-width: 320px;
+  display: flex; flex-direction: column; gap: 6px; pointer-events: none;
+}
+.toast {
+  padding: 12px 15px; border-radius: var(--r);
+  font-size: .87rem; font-weight: 600; display: flex; align-items: center; gap: 9px;
+  animation: tpop .22s ease; box-shadow: 0 4px 20px rgba(0,0,0,.5);
+}
+.toast-ok  { background: var(--green); color: #071a0f; }
+.toast-err { background: var(--red);   color: #fff; }
+@keyframes tpop { from { opacity:0; transform: scale(.92) translateY(-5px); } to { opacity:1; transform: none; } }
+
+/* ── Empty ── */
+.empty { text-align: center; padding: 44px 20px; color: var(--dim); }
+.empty .ei { font-size: 2.6rem; margin-bottom: 10px; opacity: .3; }
+.empty .et { font-size: .82rem; }
+
+/* ── Copyright ── */
+.copyright {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 35;
+  text-align: center; padding: 5px 0 calc(5px + var(--safe-bot));
+  background: var(--surface); border-top: 1px solid var(--border);
+  font-family: var(--mono); font-size: .6rem; color: var(--dim);
+  letter-spacing: .08em; pointer-events: none;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     DEPARTMENT SELECTION SCREEN
+════════════════════════════════════════ -->
+<div id="dept-screen">
+  <div class="ds-logo">STOCK<span>R</span></div>
+  <div class="ds-sub">Inventory Management System</div>
+  <div class="ds-label">Select Department</div>
+
+  <div class="dept-cards">
+    <div class="dept-card prod" onclick="enterDept('production')">
+      <div class="dc-icon">🏭</div>
+      <div class="dc-info">
+        <div class="dc-name">Production</div>
+        <div class="dc-desc">Hardware, PPE, machinery &amp; raw materials</div>
+      </div>
+      <div class="dc-arrow">›</div>
+    </div>
+    <div class="dept-card elec" onclick="enterDept('electronic')">
+      <div class="dc-icon">⚡</div>
+      <div class="dc-info">
+        <div class="dc-name">Electronic</div>
+        <div class="dc-desc">Components, cables, controllers &amp; power</div>
+      </div>
+      <div class="dc-arrow">›</div>
+    </div>
+  </div>
+
+  <div class="ds-user" onclick="changeUser()">
+    👤 Logged in as <span class="ds-user-name" id="ds-uname">Worker</span> &nbsp;·&nbsp; tap to change
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     MAIN APP
+════════════════════════════════════════ -->
+<div id="main-app" style="display:none">
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <button class="back-btn" onclick="leaveDept()">
+        <span class="back-arrow">‹</span> Departments
+      </button>
+      <div class="dept-badge">
+        <div class="dept-badge-dot"></div>
+        <span class="dept-badge-name" id="dept-badge-name">—</span>
+      </div>
+      <div class="topbar-right">
+        <div class="led" id="led"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabbar">
+    <button class="tab-btn act" data-tab="stock" onclick="goTab('stock',this)"><div class="ti">📦</div><div class="tl">Stock</div></button>
+    <button class="tab-btn"     data-tab="in"    onclick="goTab('in',this)">   <div class="ti">⬇️</div><div class="tl">IN</div></button>
+    <button class="tab-btn"     data-tab="out"   onclick="goTab('out',this)">  <div class="ti">⬆️</div><div class="tl">OUT</div></button>
+    <button class="tab-btn"     data-tab="codes" onclick="goTab('codes',this)"><div class="ti">🔲</div><div class="tl">Codes</div></button>
+    <button class="tab-btn"     data-tab="log"   onclick="goTab('log',this)">  <div class="ti">📋</div><div class="tl">Log</div></button>
+  </div>
+
+  <div class="panels">
+
+    <!-- STOCK -->
+    <div class="panel act" id="p-stock">
+      <div class="stat-grid">
+        <div class="stat-box"><div class="stat-n" id="sn-total">0</div><div class="stat-l">Items</div></div>
+        <div class="stat-box"><div class="stat-n" style="color:var(--green)" id="sn-ok">0</div><div class="stat-l">OK</div></div>
+        <div class="stat-box"><div class="stat-n" style="color:var(--red)"   id="sn-low">0</div><div class="stat-l">Low/Out</div></div>
+      </div>
+      <div class="searchbar">
+        <span style="font-size:.95rem;opacity:.35">🔍</span>
+        <input type="search" id="q" placeholder="Search name, SKU, category…" oninput="renderStock()">
+      </div>
+      <div id="stock-list"></div>
+      <div style="height:70px"></div>
+    </div>
+
+    <!-- TRANSFER IN -->
+    <div class="panel" id="p-in">
+      <div class="scard">
+        <div class="scard-title">Scan or Enter SKU</div>
+        <div class="scan-trigger" id="st-in" onclick="toggleScan('in')">
+          <div id="rd-in"></div>
+          <div id="sp-in"><div class="si">📷</div><div class="st">Tap to Scan</div><div class="sh">QR code or barcode</div></div>
+        </div>
+        <div class="field"><label>SKU</label>
+          <input type="text" id="ti-sku" placeholder="Scan above or type SKU…" oninput="preview('in',this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
+        </div>
+        <div class="preview-box" id="pv-in"><div class="pv-empty">Item preview appears here</div></div>
+        <div class="field"><label>Quantity to Add</label>
+          <input type="number" id="ti-qty" value="1" min="1" inputmode="numeric" pattern="[0-9]*">
+        </div>
+        <div class="field"><label>Notes (optional)</label>
+          <input type="text" id="ti-note" placeholder="PO number, supplier…" autocomplete="off">
+        </div>
+        <button class="bigbtn btn-in" onclick="doTransfer('in')">✓ &nbsp;Confirm Transfer IN</button>
+      </div>
+    </div>
+
+    <!-- TRANSFER OUT -->
+    <div class="panel" id="p-out">
+      <div class="scard">
+        <div class="scard-title">Scan or Enter SKU</div>
+        <div class="scan-trigger" id="st-out" onclick="toggleScan('out')">
+          <div id="rd-out"></div>
+          <div id="sp-out"><div class="si">📷</div><div class="st">Tap to Scan</div><div class="sh">QR code or barcode</div></div>
+        </div>
+        <div class="field"><label>SKU</label>
+          <input type="text" id="to-sku" placeholder="Scan above or type SKU…" oninput="preview('out',this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
+        </div>
+        <div class="preview-box" id="pv-out"><div class="pv-empty">Item preview appears here</div></div>
+        <div class="field"><label>Quantity to Remove</label>
+          <input type="number" id="to-qty" value="1" min="1" inputmode="numeric" pattern="[0-9]*">
+        </div>
+        <div class="field"><label>Reason / Destination</label>
+          <input type="text" id="to-note" placeholder="Sales order, department…" autocomplete="off">
+        </div>
+        <button class="bigbtn btn-out" onclick="doTransfer('out')">✓ &nbsp;Confirm Transfer OUT</button>
+      </div>
+    </div>
+
+    <!-- CODES -->
+    <div class="panel" id="p-codes">
+      <div class="scard">
+        <div class="scard-title">QR Code Generator</div>
+        <div class="field"><label>Content / SKU</label><input type="text" id="qr-val" placeholder="SKU or any text…" autocomplete="off"></div>
+        <div class="field"><label>Label (optional)</label><input type="text" id="qr-lbl" placeholder="Label below QR" autocomplete="off"></div>
+        <button class="bigbtn btn-blue" onclick="genQR()">Generate QR Code</button>
+        <div class="code-preview" id="qr-wrap"><div class="ph">QR code appears here</div></div>
+        <div class="dl-row" id="qr-dl"></div>
+      </div>
+      <div class="scard">
+        <div class="scard-title">Barcode Generator</div>
+        <div class="field"><label>Content / SKU</label><input type="text" id="bc-val" placeholder="SKU or numeric code…" autocomplete="off"></div>
+        <div class="field"><label>Format</label>
+          <select id="bc-fmt">
+            <option value="CODE128">CODE128 (recommended)</option>
+            <option value="EAN13">EAN-13</option>
+            <option value="EAN8">EAN-8</option>
+            <option value="UPC">UPC</option>
+            <option value="CODE39">CODE39</option>
+          </select>
+        </div>
+        <button class="bigbtn btn-blue" onclick="genBC()">Generate Barcode</button>
+        <div class="code-preview" id="bc-wrap"><div class="ph">Barcode appears here</div></div>
+        <div class="dl-row" id="bc-dl"></div>
+      </div>
+      <div class="scard">
+        <div class="scard-title">Batch from This Dept</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <button class="bigbtn btn-ghost" style="height:44px;font-size:.82rem" onclick="batch('qr')">All QR Codes</button>
+          <button class="bigbtn btn-ghost" style="height:44px;font-size:.82rem" onclick="batch('bc')">All Barcodes</button>
+        </div>
+        <div id="batch-out" style="margin-top:13px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center"></div>
+      </div>
+    </div>
+
+    <!-- LOG -->
+    <div class="panel" id="p-log">
+      <div class="filter-strip">
+        <button class="ftag act" onclick="flog('all',this)">All</button>
+        <button class="ftag"     onclick="flog('in',this)">Transfer In</button>
+        <button class="ftag"     onclick="flog('out',this)">Transfer Out</button>
+      </div>
+      <div id="log-list"></div>
+    </div>
+
+  </div><!-- /panels -->
+
+  <button class="fab" id="fab" onclick="openSheet()">＋</button>
+
+</div><!-- /main-app -->
+
+<!-- ADD / EDIT SHEET -->
+<div class="sheet-overlay" id="sheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">
+      <span id="sheet-title">Add Item</span>
+      <button class="sheet-x" onclick="closeSheet()">✕</button>
+    </div>
+    <div class="field"><label>SKU *</label><input type="text" id="f-sku" placeholder="e.g. PRD-001" autocomplete="off" autocorrect="off" spellcheck="false"></div>
+    <div class="field"><label>Item Name *</label><input type="text" id="f-name" placeholder="e.g. Assembly Bracket"></div>
+    <div class="field"><label>Category</label><input type="text" id="f-cat" placeholder="e.g. Hardware"></div>
+    <div class="field"><label>Initial Quantity</label><input type="number" id="f-qty" value="0" inputmode="numeric"></div>
+    <div class="field"><label>Unit</label><input type="text" id="f-unit" placeholder="pcs, kg, m, box…"></div>
+    <div class="field"><label>Location</label><input type="text" id="f-loc" placeholder="e.g. Shelf A3"></div>
+    <div class="field"><label>Low Stock Alert At</label><input type="number" id="f-thr" value="5" inputmode="numeric"></div>
+    <button class="bigbtn btn-blue" onclick="saveItem()">Save Item</button>
+    <button class="bigbtn btn-ghost" onclick="closeSheet()">Cancel</button>
+    <div style="height:6px"></div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<!-- Copyright always visible -->
+<div class="copyright" id="copyright" style="display:none">
+  © <span id="copy-yr"></span> By MVASIAV
+</div>
+
+<script>
+'use strict';
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+// Each dept has its own DB
+const DBS = { production: { inventory:[], history:[] }, electronic: { inventory:[], history:[] } };
+let DEPT       = null;   // active dept: 'production' | 'electronic'
+let histFilter = 'all';
+let editSku    = null;
+let scanners   = {};
+let ws         = null;
+let username   = localStorage.getItem('stkr_user') || 'Worker';
+
+const DEPT_META = {
+  production: { label:'Production', short:'PROD', cls:'dept-prod' },
+  electronic: { label:'Electronic', short:'ELEC', cls:'dept-elec' }
+};
+
+// Set username displays
+document.getElementById('ds-uname').textContent = username;
+document.getElementById('copy-yr').textContent = new Date().getFullYear();
+
+/* ═══════════════════════════════════════
+   DEPARTMENT NAVIGATION
+═══════════════════════════════════════ */
+function enterDept(dept) {
+  DEPT = dept;
+  const meta = DEPT_META[dept];
+
+  // Apply dept class to main app for colour theming
+  const app = document.getElementById('main-app');
+  app.classList.remove('dept-prod', 'dept-elec');
+  app.classList.add(meta.cls);
+
+  // Update badge
+  document.getElementById('dept-badge-name').textContent = meta.label.toUpperCase();
+
+  // Show main, hide selection
+  document.getElementById('dept-screen').classList.add('hidden');
+  app.style.display = 'flex';
+  document.getElementById('copyright').style.display = 'block';
+
+  // Reset to stock tab
+  goTab('stock', document.querySelector('.tab-btn[data-tab="stock"]'));
+
+  // Load data
+  loadDept();
+  connectWS();
+}
+
+function leaveDept() {
+  stopAllScans();
+  if (ws) { ws.close(); ws = null; }
+  DEPT = null;
+  document.getElementById('dept-screen').classList.remove('hidden');
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('copyright').style.display = 'none';
+}
+
+/* ═══════════════════════════════════════
+   API
+═══════════════════════════════════════ */
+async function api(path, method='GET', body) {
+  const r = await fetch(path, {
+    method,
+    headers: { 'Content-Type':'application/json' },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  return r.json();
+}
+
+async function loadDept() {
+  try {
+    DBS[DEPT] = await api(`/api/${DEPT}/data`);
+    renderAll();
+  } catch { toast('Cannot reach server', 'err'); }
+}
+
+/* ═══════════════════════════════════════
+   WEBSOCKET
+═══════════════════════════════════════ */
+function connectWS() {
+  if (ws && ws.readyState < 2) return;
+  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  try {
+    ws = new WebSocket(`${proto}://${location.host}`);
+    ws.onopen  = () => setLed('on');
+    ws.onclose = () => { setLed('off'); if (DEPT) setTimeout(connectWS, 3000); };
+    ws.onerror = () => setLed('off');
+    ws.onmessage = e => {
+      try {
+        const m = JSON.parse(e.data);
+        if (m.type === 'sync' && m.dept) {
+          DBS[m.dept] = m.data;
+          if (m.dept === DEPT) renderAll();
+        }
+      } catch {}
+    };
+  } catch { setLed('off'); setTimeout(connectWS, 5000); }
+}
+
+function setLed(s) {
+  const el = document.getElementById('led');
+  if (el) el.className = 'led ' + s;
+}
+
+/* ═══════════════════════════════════════
+   TABS
+═══════════════════════════════════════ */
+function goTab(tab, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('act'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('act'));
+  document.getElementById('p-' + tab).classList.add('act');
+  btn.classList.add('act');
+  document.getElementById('fab').style.display = tab === 'stock' ? 'flex' : 'none';
+  stopAllScans();
+}
+
+/* ═══════════════════════════════════════
+   RENDER
+═══════════════════════════════════════ */
+function renderAll() {
+  renderStats();
+  renderStock();
+  renderLog();
+}
+
+function renderStats() {
+  const inv = DBS[DEPT].inventory || [];
+  document.getElementById('sn-total').textContent = inv.length;
+  document.getElementById('sn-ok').textContent    = inv.filter(i => i.qty > i.threshold).length;
+  document.getElementById('sn-low').textContent   = inv.filter(i => i.qty <= i.threshold).length;
+}
+
+function renderStock() {
+  const q = (document.getElementById('q').value || '').toLowerCase().trim();
+  const items = (DBS[DEPT].inventory || []).filter(i =>
+    !q || i.sku.toLowerCase().includes(q) || i.name.toLowerCase().includes(q) || (i.category||'').toLowerCase().includes(q)
+  );
+  const el = document.getElementById('stock-list');
+  if (!items.length) { el.innerHTML = `<div class="empty"><div class="ei">📦</div><div class="et">No items found</div></div>`; return; }
+  el.innerHTML = items.map(it => {
+    const st = it.qty === 0 ? 'out' : it.qty <= it.threshold ? 'low' : 'ok';
+    const qc = { ok:'var(--green)', low:'var(--amber)', out:'var(--red)' }[st];
+    const badge = { ok:'<span class="pill pill-ok">OK</span>', low:'<span class="pill pill-low">LOW</span>', out:'<span class="pill pill-out">OUT</span>' }[st];
+    return `<div class="inv-card s-${st}">
+      <div class="inv-main">
+        <div class="inv-name">${e(it.name)}</div>
+        <div class="inv-sku">${e(it.sku)}</div>
+        <div class="inv-meta">${e(it.category||'—')} · ${e(it.location||'—')}</div>
+        <div class="inv-acts">
+          <button class="ia edit" onclick="openEdit('${e(it.sku)}')">✏ Edit</button>
+          <button class="ia qr"   onclick="quickQR('${e(it.sku)}','${e(it.name)}')">🔲 QR</button>
+          <button class="ia del"  onclick="delItem('${e(it.sku)}')">🗑 Del</button>
+        </div>
+      </div>
+      <div class="inv-side">
+        <div class="inv-qty" style="color:${qc}">${it.qty}</div>
+        <div class="inv-unit">${e(it.unit||'pcs')}</div>
+        ${badge}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderLog() {
+  const list = (DBS[DEPT].history || []).filter(t => histFilter === 'all' || t.type === histFilter).slice(0, 150);
+  const el = document.getElementById('log-list');
+  if (!list.length) { el.innerHTML = `<div class="empty"><div class="ei">📋</div><div class="et">No transactions yet</div></div>`; return; }
+  el.innerHTML = list.map(tx => {
+    const d = new Date(tx.time);
+    const ts = d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'}) + ' ' + d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    const sign = tx.type==='in' ? '+' : '−';
+    const col  = tx.type==='in' ? 'var(--green)' : 'var(--red)';
+    const icon = tx.type==='in' ? '⬇️' : '⬆️';
+    return `<div class="hx-item hx-${tx.type}">
+      <div class="hx-icon">${icon}</div>
+      <div class="hx-info">
+        <div class="hx-name">${e(tx.name)}</div>
+        <div class="hx-meta">${e(tx.sku)} · ${ts} · ${e(tx.user||'')}${tx.notes?' · '+e(tx.notes):''}</div>
+      </div>
+      <div class="hx-qty" style="color:${col}">${sign}${tx.qty}</div>
+    </div>`;
+  }).join('');
+}
+
+function flog(f, btn) {
+  histFilter = f;
+  document.querySelectorAll('.ftag').forEach(b => b.classList.remove('act'));
+  btn.classList.add('act');
+  renderLog();
+}
+
+/* ═══════════════════════════════════════
+   SCANNER
+═══════════════════════════════════════ */
+function toggleScan(dir) {
+  const box = document.getElementById('st-' + dir);
+  const ph  = document.getElementById('sp-' + dir);
+  const rid = 'rd-' + dir;
+
+  if (scanners[dir]) {
+    scanners[dir].stop().catch(()=>{});
+    scanners[dir] = null;
+    ph.style.display = ''; box.classList.remove('active'); return;
+  }
+
+  navigator.mediaDevices.getUserMedia({ video: { facingMode:'environment' } })
+    .then(stream => {
+      stream.getTracks().forEach(t => t.stop());
+      ph.style.display = 'none';
+      box.classList.add('active');
+
+      const scanner = new Html5Qrcode(rid, { verbose:false });
+      scanner.start(
+        { facingMode:'environment' },
+        { fps:12, qrbox:{ width:260, height:140 }, aspectRatio:1.5 },
+        decoded => {
+          const skuEl = dir==='in' ? 'ti-sku' : 'to-sku';
+          document.getElementById(skuEl).value = decoded;
+          preview(dir, decoded);
+          scanner.stop().catch(()=>{});
+          scanners[dir] = null;
+          ph.style.display = ''; box.classList.remove('active');
+          toast('Scanned: ' + decoded, 'ok');
+          if (navigator.vibrate) navigator.vibrate(80);
+        },
+        ()=>{}
+      ).then(()=>{ scanners[dir]=scanner; })
+       .catch(err=>{ ph.style.display=''; box.classList.remove('active'); toast('Scanner error: '+(err.message||err),'err'); });
+    })
+    .catch(err => {
+      let msg = 'Camera permission denied.';
+      if (err.name==='NotFoundError')    msg = 'No camera found.';
+      if (err.name==='NotAllowedError')  msg = 'Camera blocked — allow in browser settings.';
+      if (err.name==='NotReadableError') msg = 'Camera in use by another app.';
+      toast(msg, 'err');
+    });
+}
+
+function stopAllScans() {
+  ['in','out'].forEach(dir => {
+    if (scanners[dir]) { scanners[dir].stop().catch(()=>{}); scanners[dir]=null; }
+    const ph=document.getElementById('sp-'+dir); if(ph) ph.style.display='';
+    const box=document.getElementById('st-'+dir); if(box) box.classList.remove('active');
+  });
+}
+
+/* ═══════════════════════════════════════
+   PREVIEW
+═══════════════════════════════════════ */
+function preview(dir, sku) {
+  const el   = document.getElementById('pv-' + dir);
+  const item = (DBS[DEPT].inventory||[]).find(i => i.sku.toLowerCase() === (sku||'').toLowerCase());
+  if (!item) {
+    el.innerHTML = sku ? `<div class="pv-empty" style="color:var(--red)">⚠ Not found: ${e(sku)}</div>` : `<div class="pv-empty">Item preview appears here</div>`;
+    return;
+  }
+  const qc = item.qty===0 ? 'var(--red)' : item.qty<=item.threshold ? 'var(--amber)' : 'var(--green)';
+  el.innerHTML = `<div class="pv-name">${e(item.name)}</div><div class="pv-sku">${e(item.sku)} · ${e(item.location||'—')}</div><div><span class="pv-qty" style="color:${qc}">${item.qty}</span> <span class="pv-unit">${e(item.unit||'pcs')}</span></div>`;
+}
+
+/* ═══════════════════════════════════════
+   TRANSFERS
+═══════════════════════════════════════ */
+async function doTransfer(dir) {
+  const sku  = (document.getElementById(dir==='in'?'ti-sku':'to-sku').value||'').trim();
+  const qty  = parseInt(document.getElementById(dir==='in'?'ti-qty':'to-qty').value)||0;
+  const note = (document.getElementById(dir==='in'?'ti-note':'to-note').value||'').trim();
+  if (!sku)   { toast('Enter or scan a SKU','err'); return; }
+  if (qty<1)  { toast('Quantity must be at least 1','err'); return; }
+  try {
+    const res = await api(`/api/${DEPT}/transfer`, 'POST', { type:dir, sku, qty, notes:note, user:username });
+    if (res.error) { toast(res.error,'err'); return; }
+    toast(`${dir==='in'?'+':'-'}${qty} · ${res.item.name}`, 'ok');
+    if (navigator.vibrate) navigator.vibrate([50,30,50]);
+    document.getElementById(dir==='in'?'ti-sku':'to-sku').value='';
+    document.getElementById(dir==='in'?'ti-qty':'to-qty').value=1;
+    document.getElementById(dir==='in'?'ti-note':'to-note').value='';
+    document.getElementById('pv-'+dir).innerHTML='<div class="pv-empty">Item preview appears here</div>';
+  } catch { toast('Network error — check WiFi','err'); }
+}
+
+/* ═══════════════════════════════════════
+   INVENTORY CRUD
+═══════════════════════════════════════ */
+function openSheet() {
+  editSku = null;
+  document.getElementById('sheet-title').textContent = 'Add Item';
+  ['f-sku','f-name','f-cat','f-unit','f-loc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-qty').value=0;
+  document.getElementById('f-thr').value=5;
+  document.getElementById('sheet').classList.add('open');
+}
+
+function openEdit(sku) {
+  const it = (DBS[DEPT].inventory||[]).find(i=>i.sku===sku);
+  if (!it) return;
+  editSku = sku;
+  document.getElementById('sheet-title').textContent='Edit Item';
+  document.getElementById('f-sku').value=it.sku;
+  document.getElementById('f-name').value=it.name;
+  document.getElementById('f-cat').value=it.category||'';
+  document.getElementById('f-qty').value=it.qty;
+  document.getElementById('f-unit').value=it.unit||'';
+  document.getElementById('f-loc').value=it.location||'';
+  document.getElementById('f-thr').value=it.threshold||5;
+  document.getElementById('sheet').classList.add('open');
+}
+
+function closeSheet() { document.getElementById('sheet').classList.remove('open'); }
+
+async function saveItem() {
+  const sku  = document.getElementById('f-sku').value.trim();
+  const name = document.getElementById('f-name').value.trim();
+  if (!sku||!name) { toast('SKU and Name required','err'); return; }
+  const item = { sku, name, category:document.getElementById('f-cat').value.trim(), qty:parseInt(document.getElementById('f-qty').value)||0, unit:document.getElementById('f-unit').value.trim()||'pcs', location:document.getElementById('f-loc').value.trim(), threshold:parseInt(document.getElementById('f-thr').value)||5 };
+  try {
+    const res = editSku
+      ? await api(`/api/${DEPT}/inventory/${encodeURIComponent(editSku)}`,'PUT',item)
+      : await api(`/api/${DEPT}/inventory`,'POST',item);
+    if (res.error) { toast(res.error,'err'); return; }
+    toast(editSku?'Item updated':'Item added','ok');
+    closeSheet();
+  } catch { toast('Network error','err'); }
+}
+
+async function delItem(sku) {
+  const it = (DBS[DEPT].inventory||[]).find(i=>i.sku===sku);
+  if (!confirm(`Delete "${it?.name||sku}"?`)) return;
+  try { await api(`/api/${DEPT}/inventory/${encodeURIComponent(sku)}`,'DELETE'); toast('Deleted','ok'); }
+  catch { toast('Network error','err'); }
+}
+
+/* ═══════════════════════════════════════
+   CODE GENERATOR
+═══════════════════════════════════════ */
+function genQR() {
+  const val=document.getElementById('qr-val').value.trim();
+  const lbl=document.getElementById('qr-lbl').value.trim();
+  if (!val) { toast('Enter content','err'); return; }
+  const wrap=document.getElementById('qr-wrap');
+  wrap.innerHTML=`<div id="qr-el"></div>${lbl?`<div style="color:#333;font-family:monospace;font-size:.72rem;text-align:center">${e(lbl)}</div>`:''}`;
+  new QRCode(document.getElementById('qr-el'),{text:val,width:200,height:200,correctLevel:QRCode.CorrectLevel.H});
+  document.getElementById('qr-dl').innerHTML=`<button class="bigbtn btn-ghost" style="height:42px;font-size:.8rem" onclick="dlQR()">⬇ Download PNG</button>`;
+  toast('QR generated','ok');
+}
+
+function genBC() {
+  const val=document.getElementById('bc-val').value.trim();
+  const fmt=document.getElementById('bc-fmt').value;
+  if (!val) { toast('Enter content','err'); return; }
+  const wrap=document.getElementById('bc-wrap');
+  wrap.innerHTML=`<svg id="bc-svg"></svg>`;
+  try {
+    JsBarcode('#bc-svg',val,{format:fmt,displayValue:true,lineColor:'#000',background:'#fff',margin:10});
+    document.getElementById('bc-dl').innerHTML=`
+      <button class="bigbtn btn-ghost" style="height:42px;font-size:.8rem" onclick="dlBC('svg')">⬇ SVG</button>
+      <button class="bigbtn btn-ghost" style="height:42px;font-size:.8rem" onclick="dlBC('png')">⬇ PNG</button>`;
+    toast('Barcode generated','ok');
+  } catch(ex) { wrap.innerHTML=`<div style="color:var(--red);padding:10px;font-size:.8rem">${ex.message}</div>`; toast(ex.message,'err'); }
+}
+
+function quickQR(sku,name) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('act'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('act'));
+  document.querySelector('.tab-btn[data-tab="codes"]').classList.add('act');
+  document.getElementById('p-codes').classList.add('act');
+  document.getElementById('fab').style.display='none';
+  document.getElementById('qr-val').value=sku;
+  document.getElementById('qr-lbl').value=name;
+  genQR();
+  document.getElementById('p-codes').scrollTo(0,0);
+}
+
+function batch(type) {
+  const out=document.getElementById('batch-out');
+  out.innerHTML='';
+  (DBS[DEPT].inventory||[]).forEach(it=>{
+    const wrap=document.createElement('div');
+    wrap.style.cssText='background:#fff;padding:12px;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:6px';
+    if(type==='qr'){const qEl=document.createElement('div');wrap.appendChild(qEl);new QRCode(qEl,{text:it.sku,width:110,height:110});}
+    else{const svg=document.createElement('svg');wrap.appendChild(svg);try{JsBarcode(svg,it.sku,{format:'CODE128',width:1.3,height:55,displayValue:true,fontSize:11,margin:4});}catch{}}
+    const lbl=document.createElement('div');
+    lbl.style.cssText='font-size:.62rem;color:#333;text-align:center;font-family:monospace;max-width:130px;word-break:break-word';
+    lbl.textContent=it.sku+'\n'+it.name;
+    wrap.appendChild(lbl);
+    out.appendChild(wrap);
+  });
+  if(!(DBS[DEPT].inventory||[]).length) out.innerHTML='<span style="color:var(--muted);font-size:.82rem">No items in this dept.</span>';
+}
+
+function dlQR(){const c=document.querySelector('#qr-el canvas');if(!c)return;const a=document.createElement('a');a.href=c.toDataURL();a.download=`qr-${document.getElementById('qr-val').value}.png`;a.click();}
+function dlBC(fmt){
+  const svg=document.getElementById('bc-svg');if(!svg)return;
+  if(fmt==='svg'){const b=new Blob([svg.outerHTML],{type:'image/svg+xml'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`bc-${document.getElementById('bc-val').value}.svg`;a.click();}
+  else{const c=document.createElement('canvas');const bb=svg.getBoundingClientRect();c.width=bb.width||400;c.height=bb.height||130;const ctx=c.getContext('2d');const img=new Image();img.onload=()=>{ctx.drawImage(img,0,0);const a=document.createElement('a');a.href=c.toDataURL();a.download=`bc-${document.getElementById('bc-val').value}.png`;a.click();};img.src='data:image/svg+xml;base64,'+btoa(svg.outerHTML);}
+}
+
+/* ═══════════════════════════════════════
+   USER
+═══════════════════════════════════════ */
+function changeUser() {
+  const n=prompt('Your name:',username);
+  if(n&&n.trim()){
+    username=n.trim();
+    localStorage.setItem('stkr_user',username);
+    document.getElementById('ds-uname').textContent=username;
+    toast('Name: '+username,'ok');
+  }
+}
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+function toast(msg,type='ok'){
+  const el=document.createElement('div');
+  el.className='toast toast-'+type;
+  el.innerHTML=`<span>${type==='ok'?'✓':'⚠'}</span> ${msg}`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>el.remove(),3000);
+}
+
+/* ═══════════════════════════════════════
+   UTILS
+═══════════════════════════════════════ */
+function e(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+</script>
+</body>
+</html>

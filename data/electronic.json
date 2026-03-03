@@ -1,0 +1,545 @@
+{
+  "inventory": [
+    {
+      "sku": "SKU - IBJBD",
+      "name": "LAN CABLE - 0.5 M",
+      "category": "CABLE",
+      "qty": 8,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU - IBJBJ",
+      "name": "LAN CABLE - 5 M",
+      "category": "CABLE",
+      "qty": 1,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU - 3PIN",
+      "name": "3 - PIN PLUG",
+      "category": "ELECTRICAL COMPONENT",
+      "qty": 3,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - DRAWER ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU - XW5S-P2.5-10RD",
+      "name": "SHORT BAR 2.5MM2",
+      "category": "ELECTRICAL COMPONENT",
+      "qty": 3,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - DRAWER ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU - SR2A101BD",
+      "name": "COMPACT SMART RELAY",
+      "category": "RELAY",
+      "qty": 1,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 1
+    },
+    {
+      "sku": "SKU - VF1.25 -4YS",
+      "name": "INSULATED SPADE TERMINAL",
+      "category": "ELECTRICAL COMPONENT",
+      "qty": 0,
+      "unit": "PKT",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 2
+    },
+    {
+      "sku": "SKU - LT07508",
+      "name": "FERRULE 0.75-0.8MM",
+      "category": "ELECTRICAL COMPONENT",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 50
+    },
+    {
+      "sku": "SKU - E-MEM150RYG-S",
+      "name": "MISUMI - SIGNAL TOWERS 3 COLOR-IN ONE MODULE",
+      "category": "TOWER LIGHT",
+      "qty": 2,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 1
+    },
+    {
+      "sku": "SKU - XW5T-P2.5-1.1-2",
+      "name": "PUSH IN TERMINAL BLOCK",
+      "category": "ELECTRICAL COMPONENT",
+      "qty": 38,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 30
+    },
+    {
+      "sku": "SKU - XW5T-P2.5-1.1-1",
+      "name": "PUSH-IN TERMINAL BLOCK",
+      "category": "ELECTRICAL COMPONENT",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 30
+    },
+    {
+      "sku": "SKU - XW5T-P2.5-1.2-2",
+      "name": "PUSH-IN TERMINAL BLOCK",
+      "category": "ELECTRICAL COMPONENT",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 5
+    },
+    {
+      "sku": "SKU - XW5T-P2.5-2.2-1",
+      "name": "PUSH-IN TERMINAL BLOCK",
+      "category": "ELECTRICAL COMPONENT",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 5
+    },
+    {
+      "sku": "SKU - DYHX - 001",
+      "name": "LOAD CELL 10KG RING - VENTURE",
+      "category": "SENSOR",
+      "qty": 2,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 1
+    },
+    {
+      "sku": "SKU - MA2412003659",
+      "name": "SCREW SENSOR PC10 - N VSI MACHINE",
+      "category": "SENSOR",
+      "qty": 1,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU - E3Z-LL61",
+      "name": "OMRON- LASER SENSOR",
+      "category": "SENSOR",
+      "qty": 1,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC (YANG LAIN KAT MR LOW)",
+      "threshold": 5
+    },
+    {
+      "sku": "SKU - DYMH - 113",
+      "name": "LOAD CELL POINTER 50KG",
+      "category": "SENSOR",
+      "qty": 1,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 1
+    },
+    {
+      "sku": "SKU - MOLEX - 2",
+      "name": "MOLEX 2 PIN",
+      "category": "WIRING",
+      "qty": 30,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 20
+    },
+    {
+      "sku": "SKU - MOLEX - 4",
+      "name": "MOLEX 4 PIN",
+      "category": "WIRING",
+      "qty": 34,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 20
+    },
+    {
+      "sku": "SKU - MOLEX - 10",
+      "name": "MOLEX 10 PIN",
+      "category": "WIRING",
+      "qty": 24,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 10
+    },
+    {
+      "sku": "SKU - E3Z - D81",
+      "name": "PHOTOELECTRIC SWITCH SENSOR",
+      "category": "SENSOR",
+      "qty": 1,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 5
+    },
+    {
+      "sku": "SKU - MWBD - 10",
+      "name": "BLACK SPIRAL WRAPPING BAND",
+      "category": "WIRING",
+      "qty": 1,
+      "unit": "PKT",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 2
+    },
+    {
+      "sku": "SKU - MWBD - 12",
+      "name": "BLACK SPIRAL WRAPPING BAND",
+      "category": "WIRING",
+      "qty": 1,
+      "unit": "PKT",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 2
+    },
+    {
+      "sku": "SKU - E204071 - 3.0 Ø",
+      "name": "SHRINKING TUBE 3.0 Ø",
+      "category": "WIRING",
+      "qty": 1,
+      "unit": "m",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU - E204071 - 6.0 Ø",
+      "name": "SHRINKING TUBE 6.0 Ø",
+      "category": "WIRING",
+      "qty": 5,
+      "unit": "m",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU - E204071 - 10 Ø",
+      "name": "SHRINKING TUBE 10 Ø",
+      "category": "WIRING",
+      "qty": 5,
+      "unit": "m",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU - RUBBER - 1",
+      "name": "SOFT RUBBER PROTECTING",
+      "category": "OTHER",
+      "qty": 2,
+      "unit": "m",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 2
+    },
+    {
+      "sku": "SKU - EL - 01",
+      "name": "FUSE",
+      "category": "OTHER",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - DRAWER ELECTRONIC",
+      "threshold": 10
+    },
+    {
+      "sku": "SKU - CBLT - 4''",
+      "name": "CABLE TIES 4\" 100MM",
+      "category": "ELECTRONIC",
+      "qty": 1,
+      "unit": "PKT",
+      "location": "TINGKAT 2 - DRAWER ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU - CBLT - 8\"",
+      "name": "CABLE TIES 8\" 200MM",
+      "category": "OTHER",
+      "qty": 1,
+      "unit": "PKT",
+      "location": "TINGKAT 2 - DRAWER ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU - \tGLS-1",
+      "name": "MAGNETIC PROXIMITY SENSOR  (DOOR SENSOR)",
+      "category": "SENSOR",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 5
+    },
+    {
+      "sku": "SKU - EE-SX647",
+      "name": "PHOTO MICRO SENSOR",
+      "category": "SENSOR",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 2
+    },
+    {
+      "sku": "SKU - SS-5GL2",
+      "name": "LIMIT SWICH",
+      "category": "SENSOR",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 5
+    },
+    {
+      "sku": "SKU - SSE XA2ES542",
+      "name": "EMERGENCY STOP BUTTON",
+      "category": "PUSH BUTTON",
+      "qty": 2,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU - SSE XA2ED21",
+      "name": "SELECTOR SWITCH 2 POSITION",
+      "category": "SWITCH",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 5
+    },
+    {
+      "sku": "SKU - SSE XA2EC31",
+      "name": "GREEN MUSHROOM HEAD P.BUTTON",
+      "category": "PUSH BUTTON",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU - SSE XA2EA51",
+      "name": "YELLOW PUSH BUTTON",
+      "category": "PUSH BUTTON",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU -  SSE XA2EVB4LC",
+      "name": "RED PILOT LIGHT 24VAC/DC",
+      "category": "PILOT LIGHT",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 2
+    },
+    {
+      "sku": "SKU - SSE XA2EVB3LC",
+      "name": "GREEN PILOT LIGHT 24VAC/DC",
+      "category": "PILOT LIGHT",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 2
+    },
+    {
+      "sku": "SKU - SSE XA2EVB5LC",
+      "name": "ORANGE PILOT LIGHT 24VAC/DC",
+      "category": "PILOT LIGHT",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 2
+    },
+    {
+      "sku": "SKU - SSE XA2EVB1LC",
+      "name": "WHITE PILOT LIGHT  24VAC/DC",
+      "category": "PILOT LIGHT",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 2
+    },
+    {
+      "sku": "SKU - H3CR-A8 24-48AC/12-24DC",
+      "name": "MULTIFUCTION SOLID STATE ANALOG TIMER",
+      "category": "TIMER",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 1
+    },
+    {
+      "sku": "SKU - PF083A-E",
+      "name": "TIMER SOCKET",
+      "category": "TIMER",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 1
+    },
+    {
+      "sku": "SKU -  EZ9R56225",
+      "name": "EASY9 RESIDUAL CURRENT CIRCUIT BREAKER - 2P - 25 A",
+      "category": "MCCB",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 5
+    },
+    {
+      "sku": "SKU - EZ9F56216",
+      "name": "EASY9 MINIATURE CIRCUIT BREAKER - 2P - 16 A",
+      "category": "MCB",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 5
+    },
+    {
+      "sku": "SKU - EZ9F56106",
+      "name": "EASY9 MINIATURE CIRCUIT BREAKER - 1P - 6 A",
+      "category": "MCB",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 5
+    },
+    {
+      "sku": "SKU - G2RV-ST500",
+      "name": "OMRON DC24 BY OMB RELAY",
+      "category": "RELAY",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 10
+    },
+    {
+      "sku": "SKU -  PYDN-6.2-100S",
+      "name": "SHORT BAR FOR G2RV-ST500",
+      "category": "RELAY",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - DRAWER ELECTRONIC",
+      "threshold": 5
+    },
+    {
+      "sku": "SKU - UK5-HESI",
+      "name": "RAIL TYPE DIN RAIL FUSE TERMINAL BLOCK",
+      "category": "ELECTRICAL COMPONENT",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 3
+    },
+    {
+      "sku": "SKU - IN13SBK",
+      "name": "20A 3 POLE TERMINAL BLOCK",
+      "category": "ELECTRICAL COMPONENT",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 5
+    },
+    {
+      "sku": "SKU - E-MSM280RYG-T",
+      "name": "MISUMI - SIGNAL TOWER FOLDABLE",
+      "category": "TOWER LIGHT",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 1
+    },
+    {
+      "sku": "SKU - XVGB3SM",
+      "name": "SCHNEIDER- TOWER LIGHT - RAG - 24V - LED - W.BUZZER - TUBE MOUNTING WITH FOLDABLE BRACKET",
+      "category": "TOWER LIGHT",
+      "qty": 0,
+      "unit": "PCS",
+      "location": "TINGKAT 2 - SHELF ELECTRONIC",
+      "threshold": 1
+    }
+  ],
+  "history": [
+    {
+      "id": "1772160209932uctj",
+      "type": "in",
+      "sku": "SKU - MOLEX - 4",
+      "name": "MOLEX 4 PIN",
+      "qty": 1,
+      "notes": "",
+      "user": "DEN",
+      "time": 1772160209932
+    },
+    {
+      "id": "1772160097176onxu",
+      "type": "out",
+      "sku": "SKU - MOLEX - 4",
+      "name": "MOLEX 4 PIN",
+      "qty": 1,
+      "notes": "",
+      "user": "DEN",
+      "time": 1772160097176
+    },
+    {
+      "id": "17721547266538ipl",
+      "type": "in",
+      "sku": "SKU - E204071 - 10 Ø",
+      "name": "SHRINKING TUBE 10 Ø",
+      "qty": 1,
+      "notes": "",
+      "user": "DEN",
+      "time": 1772154726653
+    },
+    {
+      "id": "1772089559333uw85",
+      "type": "out",
+      "sku": "SKU - MOLEX - 4",
+      "name": "MOLEX 4 PIN",
+      "qty": 1,
+      "notes": "Den nk",
+      "user": "Nic",
+      "time": 1772089559334
+    },
+    {
+      "id": "1772089504803887q",
+      "type": "out",
+      "sku": "SKU - MOLEX - 10",
+      "name": "MOLEX 10 PIN",
+      "qty": 1,
+      "notes": "",
+      "user": "Nic",
+      "time": 1772089504803
+    },
+    {
+      "id": "1772077400676tbqa",
+      "type": "in",
+      "sku": "SKU-005",
+      "name": "Mounting Bracket",
+      "qty": 5,
+      "notes": "",
+      "user": "DEN",
+      "time": 1772077400676
+    },
+    {
+      "id": "177207417479445vp",
+      "type": "out",
+      "sku": "SKU-001",
+      "name": "Blue Widget",
+      "qty": 3,
+      "notes": "",
+      "user": "Worker",
+      "time": 1772074174794
+    },
+    {
+      "id": "1772074144955elh1",
+      "type": "in",
+      "sku": "SKU-001",
+      "name": "Blue Widget",
+      "qty": 15,
+      "notes": "",
+      "user": "DEN",
+      "time": 1772074144955
+    }
+  ]
+}
