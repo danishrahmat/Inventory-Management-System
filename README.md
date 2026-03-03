@@ -1,102 +1,96 @@
-╔══════════════════════════════════════════════════════╗
-║         STOCKR v2 — Factory Inventory System         ║
-╚══════════════════════════════════════════════════════╝
+STOCKR v2 — Factory Inventory System
 
-WHAT'S NEW IN v2
-─────────────────
-✓ HTTPS — camera scanning now works on all phones
+🚀 What's New in v2
+
+✓ HTTPS support — camera scanning now works on all phones
 ✓ Redesigned mobile UI — large buttons, easy to use
-✓ Better scanner — asks for camera permission properly
-✓ Vibration feedback when scan succeeds
-✓ Real-time sync across all phones on same WiFi
+✓ Improved scanner — proper camera permission prompts
+✓ Vibration feedback on successful scan
+✓ Real‑time sync across all phones on the same WiFi
+
+📦 Requirements
+A PC or laptop that stays on during work hours
+Node.js (LTS) — https://nodejs.org
+openssl
+Usually pre‑installed
+Windows: included with Git
+All phones must be on the same WiFi as the PC
+🛠 First-Time Setup (one‑time only)
+Install Node.js LTS from:
+https://nodejs.org
+Windows only — if openssl isn’t installed:
+Install Git (includes openssl): https://git-scm.com
+Or download openssl: https://slproweb.com/products/Win32OpenSSL.html
+Extract this folder anywhere (Desktop recommended)
+Done — No npm install needed!
+▶ Starting the Server
+Windows:
+Double‑click START_SERVER.bat
+
+Mac/Linux:
+
+bash
 
 
-REQUIREMENTS
-─────────────
-• A PC or laptop that stays on during work hours
-• Node.js (free) from https://nodejs.org — get the LTS version
-• openssl (usually pre-installed; on Windows: comes with Git)
-• All phones on the same WiFi as the PC
+bash start_server.sh
+On first start, an SSL certificate is auto‑generated.
+
+The console will show your network address, for example:
 
 
-FIRST-TIME SETUP (once only)
-──────────────────────────────
-1. Install Node.js from https://nodejs.org
 
-2. (Windows only) If openssl is not installed:
-   Install Git from https://git-scm.com — it includes openssl.
-   OR: Download openssl from https://slproweb.com/products/Win32OpenSSL.html
+https://192.168.1.45:3443
+Use that address on all phones.
 
-3. Extract this folder to your Desktop (or anywhere)
+📱 Connecting Phones (one‑time per phone)
+Connect phone and PC to same WiFi
+Open:
+Chrome on Android
+Safari on iPhone
+Type the HTTPS address shown in console
+Accept the security warning (self‑signed certificate):
+Chrome
+Advanced → Proceed to site (unsafe)
 
-4. That's it — no npm install needed!
+Safari
+Show Details → visit this website
 
+Allow Camera Access
+Add to Home Screen:
+Safari: Share → Add to Home Screen
+Chrome: Menu → Add to Home Screen
+The app will now appear as an icon.
 
-STARTING THE SERVER
-─────────────────────
-Windows → Double-click: START_SERVER.bat
-Mac     → Terminal: bash start_server.sh
-Linux   → Terminal: bash start_server.sh
-
-On first start it auto-generates an SSL certificate.
-
-The console will show your network address:
-  https://192.168.1.45:3443   ← use THIS on phones
-
-
-CONNECTING PHONES (one-time per phone)
-────────────────────────────────────────
-1. Connect phone to the same WiFi as the PC
-2. Open Chrome (Android) or Safari (iPhone)
-3. Type the HTTPS network address shown above
-4. You'll see a security warning — this is normal for
-   self-signed certificates:
-
-   ┌─ Chrome ─────────────────────────────────────┐
-   │ Tap "Advanced" → "Proceed to site (unsafe)"  │
-   └──────────────────────────────────────────────┘
-   ┌─ Safari ─────────────────────────────────────┐
-   │ Tap "Show Details" → "visit this website"    │
-   └──────────────────────────────────────────────┘
-
-5. ALLOW CAMERA when the browser asks
-6. Tap Share button (Safari) or Menu → "Add to Home Screen"
-   → The app appears as an icon on the phone!
+📷 Using the Scanner
+Go to Transfer IN or Transfer OUT
+Tap camera area — allow permission if asked
+Hold the barcode/QR 10–20cm away
+Phone vibrates on successful scan
+You can also type the SKU manually
+💾 Data & Backup
+All inventory data is stored here:
 
 
-USING THE SCANNER
-──────────────────
-• Go to Transfer IN or Transfer OUT tab
-• Tap the camera area — browser asks for camera permission
-• Point at barcode or QR code — hold steady 10–20cm away
-• Phone vibrates when scan succeeds
-• Or type the SKU manually in the field below
 
+data/inventory.json
+Back this file up regularly.
+To restore, replace it with a backup copy.
 
-DATA & BACKUP
-──────────────
-All data is saved to:  data/inventory.json
-Back up this file regularly. To restore, replace the file.
-
-
-TROUBLESHOOTING
-────────────────
+🔧 Troubleshooting
 Phone can't connect?
-→ Make sure both phone and PC are on the same WiFi
-→ Windows: allow Node.js through Windows Defender Firewall
-  (Windows will ask automatically the first time)
-→ Try disabling Windows Firewall temporarily to test
-
-Camera won't work?
-→ Must be HTTPS (https://...) — plain http:// won't allow camera
-→ On iPhone: Safari works best; Chrome may block camera
-→ Allow camera permission when asked
-→ If accidentally denied: go to phone Settings → Browser → Camera
-
+Ensure PC + phone are on same WiFi
+Windows: allow Node.js through Defender Firewall
+Temporarily disable firewall to test
+Camera not working?
+Must use HTTPS (http:// will not allow camera)
+iPhone: Safari recommended (Chrome may block camera)
+Ensure camera permission is granted
+If denied:
+Settings → Browser → Camera → Allow
 Data not syncing?
-→ Check the green dot in the top-right of the app
-→ Grey = disconnected; refresh the page
-
-Server port already in use?
-→ Change HTTPS_PORT in server.js (default 3443)
-→ Change HTTP_PORT too (default 3000)
+Check the status dot (top-right)
+Green = connected
+Grey = disconnected → refresh page
+Port already in use?
+Change HTTPS_PORT in server.js (default: 3443)
+Change HTTP_PORT too (default: 3000)
