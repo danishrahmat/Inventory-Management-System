@@ -3,12 +3,17 @@ STOCKR v2 — Factory Inventory System
 🚀 What's New in v2
 
 ✓ HTTPS support — camera scanning now works on all phones
+
 ✓ Redesigned mobile UI — large buttons, easy to use
+
 ✓ Improved scanner — proper camera permission prompts
+
 ✓ Vibration feedback on successful scan
+
 ✓ Real‑time sync across all phones on the same WiFi
 
 📦 Requirements
+
 A PC or laptop that stays on during work hours
 Node.js (LTS) — https://nodejs.org
 openssl
