@@ -74,13 +74,9 @@ Type the HTTPS address shown in console
 
 Accept the security warning (self‑signed certificate):
 
-Chrome
+Chrome: Advanced → Proceed to site (unsafe)
 
-Advanced → Proceed to site (unsafe)
-
-Safari
-
-Show Details → visit this website
+Safari: Show Details → visit this website
 
 Allow Camera Access
 
@@ -108,12 +104,9 @@ You can also type the SKU manually
 
 All inventory data is stored here:
 
-
 data/inventory.json
 
-Back this file up regularly.
-
-To restore, replace it with a backup copy.
+Back this file up regularly. To restore, replace it with a backup copy.
 
 🔧 Troubleshooting
 
@@ -121,9 +114,7 @@ Phone can't connect?
 
 Ensure PC + phone are on same WiFi
 
-Windows: allow Node.js through Defender Firewall
-
-Temporarily disable firewall to test
+Windows: allow Node.js through Defender Firewall Temporarily disable firewall to test
 
 Camera not working?
 
